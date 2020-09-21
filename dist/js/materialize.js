@@ -2591,10 +2591,22 @@ $jscomp.polyfill = function (e, r, p, m) {
         var triggerBRect = this.el.getBoundingClientRect();
         var dropdownBRect = this.dropdownEl.getBoundingClientRect();
 
-        var idealHeight = dropdownBRect.height;
-        var idealWidth = dropdownBRect.width;
-        var idealXPos = triggerBRect.left - dropdownBRect.left;
-        var idealYPos = triggerBRect.top - dropdownBRect.top;
+        var idealHeight;
+        var idealWidth;
+        var idealXPos;
+        var idealYPos;
+
+        if (this.options.container == document.body) {
+          idealHeight = dropdownBRect.height;
+          idealWidth = triggerBRect.width;
+          idealXPos = triggerBRect.left;
+          idealYPos = triggerBRect.top;
+        } else {
+          idealHeight = dropdownBRect.height;
+          idealWidth = dropdownBRect.width;
+          idealXPos = triggerBRect.left - dropdownBRect.left;
+          idealYPos = triggerBRect.top - dropdownBRect.top;
+        }
 
         var dropdownBounds = {
           left: idealXPos,
@@ -6475,7 +6487,7 @@ $jscomp.polyfill = function (e, r, p, m) {
       _this37.$inputField = _this37.$el.closest('.input-field');
       _this37.$active = $();
       _this37._mousedown = false;
-      _this37._setupDropdown();
+      _this37._setupDropdown(options.dropdownOptions);
 
       _this37._setupEventHandlers();
       return _this37;
@@ -6549,7 +6561,7 @@ $jscomp.polyfill = function (e, r, p, m) {
 
     }, {
       key: "_setupDropdown",
-      value: function _setupDropdown() {
+      value: function _setupDropdown(dropdownOptions) {
         var _this38 = this;
 
         this.container = document.createElement('ul');
@@ -6564,7 +6576,8 @@ $jscomp.polyfill = function (e, r, p, m) {
           coverTrigger: false,
           onItemClick: function (itemEl) {
             _this38.selectOption($(itemEl));
-          }
+          },
+          ...dropdownOptions
         });
 
         // Sketchy removal of dropdown click handler
